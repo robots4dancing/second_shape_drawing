@@ -1,0 +1,173 @@
+package second_shape_drawing;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+public class DrawingProg2 extends JFrame implements ActionListener{
+
+	JPanel topPanel = new JPanel();
+	JPanel westPanel = new JPanel();
+	DrawingPanel drawingPanel = new DrawingPanel();
+
+	JCheckBox filled = new JCheckBox("filled");
+
+	JRadioButton radioRect = new JRadioButton("rectangle");
+	JRadioButton radioOval = new JRadioButton("oval");
+	JRadioButton radioLine = new JRadioButton("line");
+	JRadioButton radioScrib = new JRadioButton("scribble");
+	ButtonGroup radioShapes = new ButtonGroup();
+
+	JRadioButton radioRed = new JRadioButton("red");
+	JRadioButton radioGreen = new JRadioButton("green");
+	JRadioButton radioBlue = new JRadioButton("blue");
+
+	DrawingProg2()
+	{
+		super("My Drawing Program");
+
+		String[] colors = {"red", "green", "blue"};
+		String[] shapes1 = {"rectangle", "oval","line","scribble"};
+
+		setSize(800, 400);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		layout(shapes1, colors);
+
+		setVisible(true);
+	}
+
+	private void layout(String[] shapes, String[] colors )
+	{
+		// set defaults
+
+		drawingPanel.drawing.setColor(Color.red);
+		drawingPanel.drawing.setDrawType(DrawType.rectangle);
+		radioRed.setSelected(true);
+		radioRect.setSelected(true);
+
+		/*
+      drawingPanel goes in the CENTER
+      Create a JPanel with a FlowLayout for the NORTH.
+      This JPanel will get the filled JCheckBox and all of the necessary radio buttons
+
+      Create a JPanel with a GridLayout(0,1) or GridLayout(3,1) for the WEST.
+      This JPanel will get the radio buttons for the colors.
+
+      All RadioButtons and the CheckBox will have ActionListeners associated with them.
+		 */
+
+		setLayout(new BorderLayout());
+		topPanel.setLayout(new FlowLayout());
+		westPanel.setLayout(new GridLayout(0,1));
+
+		add(topPanel, BorderLayout.NORTH);
+
+		topPanel.add(filled);
+		filled.addActionListener(this);
+		radioShapes.add(radioRect);
+		radioShapes.add(radioOval);
+		radioShapes.add(radioLine);
+		radioShapes.add(radioScrib);
+
+		topPanel.add(radioRect);
+		radioRect.addActionListener(this);
+		topPanel.add(radioOval);
+		radioOval.addActionListener(this);
+		topPanel.add(radioLine);
+		radioLine.addActionListener(this);
+		topPanel.add(radioScrib);
+		radioScrib.addActionListener(this);
+
+		add(drawingPanel, BorderLayout.CENTER);
+
+		add(westPanel, BorderLayout.WEST);
+
+		westPanel.add(radioRed);
+		radioRed.addActionListener(this);
+		westPanel.add(radioGreen);
+		radioGreen.addActionListener(this);
+		westPanel.add(radioBlue);
+		radioBlue.addActionListener(this);
+	}
+
+	public static void main(String[] args) {
+		DrawingProg2 dp = new DrawingProg2();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent actionEvent) {
+
+		/*
+		Handle all of the other actions, and make sure you set the visibility of 
+		the filled CheckBox appropriately.
+		The other methods to be called are:
+		       drawingPanel.drawing.setDrawType(....);
+		       drawingPanel.drawing.setFilled(.....);
+		 */
+
+		String action = actionEvent.getActionCommand();
+		System.out.println(action);
+
+		switch(action)
+		{
+		case "red":
+			drawingPanel.drawing.setColor(Color.red);
+			radioRed.setSelected(true);
+			radioGreen.setSelected(false);
+			radioBlue.setSelected(false);
+			break;
+		case "green":
+			drawingPanel.drawing.setColor(Color.green);
+			radioRed.setSelected(false);
+			radioGreen.setSelected(true);
+			radioBlue.setSelected(false);
+			break;
+		case "blue":
+			drawingPanel.drawing.setColor(Color.blue);
+			radioRed.setSelected(false);
+			radioGreen.setSelected(false);
+			radioBlue.setSelected(true);
+			break;
+		case "rectangle":
+			drawingPanel.drawing.setDrawType(DrawType.rectangle);
+			filled.setVisible(true);
+			radioShapes.clearSelection();
+			radioRect.setSelected(true);
+			break;
+		case "oval":
+			drawingPanel.drawing.setDrawType(DrawType.oval);
+			filled.setVisible(true);
+			radioShapes.clearSelection();
+			radioOval.setSelected(true);
+			break;
+		case "line":
+			drawingPanel.drawing.setDrawType(DrawType.line);
+			filled.setVisible(false);
+			radioShapes.clearSelection();
+			radioLine.setSelected(true);
+			break;
+		case "scribble":
+			drawingPanel.drawing.setDrawType(DrawType.scribble);
+			filled.setVisible(false);
+			radioShapes.clearSelection();
+			radioScrib.setSelected(true);
+			break;
+		case "filled":
+			if(filled.isSelected())
+				drawingPanel.drawing.setFilled(true);
+			else
+				drawingPanel.drawing.setFilled(false);
+			break;
+		}
+	}
+}
